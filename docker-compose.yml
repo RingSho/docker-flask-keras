@@ -1,0 +1,24 @@
+version: '3'
+ 
+services:
+  mnist_api:
+    build: ./mnist_api
+    ports:
+      - "5000:5000"
+    volumes:
+      - "./mnist_api:/projects"
+    tty: true
+    environment:
+      TZ: Asia/Tokyo
+    command: flask run --host 0.0.0.0 --port 5000
+
+  mnist2_api:
+    build: ./mnist2_api
+    ports:
+      - "5001:5001"
+    volumes:
+      - "./mnist2_api:/projects"
+    tty: true
+    environment:
+      TZ: Asia/Tokyo
+    command: flask run --host 0.0.0.0 --port 5001
