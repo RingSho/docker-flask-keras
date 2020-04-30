@@ -10,7 +10,8 @@ graph = tf.get_default_graph()
 
 save_dir = "mnist2/"
 weight_path = "mnist2/model.h5"
-image_path = "5_test.png"
+image_path = "images/input/5_test.png"
+log_path = "logs/"
 mnist_model = MnistModel()
 
 @app.route('/')
@@ -25,7 +26,8 @@ def predict():
     global graph
     with graph.as_default():
         result = mnist_model.predict(weight_path, image_path)
-        print(result)
+        with open(log_path + "log.txt", mode = "a") as f:
+            print(f.write(str(result) + "\n"))
         return jsonify(result)
 
 @app.route('/hello')
