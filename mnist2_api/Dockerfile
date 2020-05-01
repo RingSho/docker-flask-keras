@@ -1,7 +1,7 @@
 FROM tensorflow/tensorflow:1.13.1-gpu-py3
 ARG project_dir=/projects/
  
-ADD . $project_dir
+ADD requirements_gpu.txt $project_dir
  
 WORKDIR $project_dir
 
