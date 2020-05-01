@@ -2,6 +2,7 @@
 
 import time
 import keras
+
 from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
@@ -14,7 +15,7 @@ import cv2
 class MnistModel:
     def __init__(self):
         self.num_classes = 10
-        self.model = self.model_mnist(mode = "predict")
+        self.model = self.model_mnist(mode = "test")
 
     def model_mnist(self, mode="train"):
         model = Sequential()
@@ -23,15 +24,15 @@ class MnistModel:
         model.add(Dense(512, activation='relu'))
         model.add(Dropout(0.2))
         model.add(Dense(self.num_classes, activation='softmax'))
-        model.summary()
         if mode == "train":
             model.compile(loss='categorical_crossentropy',
                         optimizer=RMSprop(),
                         metrics=['accuracy'])
+        print("Done load model.")
         return model
 
     def train(self, save_dir=""):
-        batch_size = 1
+        batch_size = 64
         epochs = 1
 
         # the data, split between train and test sets
@@ -52,22 +53,20 @@ class MnistModel:
 
         self.model = self.model_mnist(mode = "train")
 
-        history = self.model_mnistmodel.fit(x_train, y_train,
+        history = self.model.fit(x_train, y_train,
                             batch_size=batch_size,
                             epochs=epochs,
                             verbose=1,
                             validation_data=(x_test, y_test))
-        score = model.evaluate(x_test, y_test, verbose=0)
-        # score = [0.1, 99.9]
+        score = self.model.evaluate(x_test, y_test, verbose=0)
         print('Test loss:', score[0])
         print('Test accuracy:', score[1])
-        time.sleep(1)
         self.model.save(save_dir + 'model.h5')
-        return {"loss": score[0], "acc": score[1]}
+        return {"loss": str(score[0]), "acc": str(score[1])}
 
-    def predict(self, weight_path="mnist2/model.h5", image_path="5_test.png"):
+    def predict(self, weight_path = "mnist/model.h5", image_path="images/input/00000.png"):
         self.model.load_weights(weight_path)
-
+        print("Done loaded weights")
         # 画像の読み込みとreshape
         X_test = []
         target_img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
@@ -82,5 +81,5 @@ class MnistModel:
 
 if __name__ == "__main__":
     mnist_model = MnistModel()
-    print(mnist_model.predict("mnist/model.h5", "5_test.png"))
-    print(mnist_model.predict("mnist/model.h5", "5_test.png"))
+    # mnist_model.train()
+    print(mnist_model.predict("mnist/model.h5", "images/input/00000.png"))

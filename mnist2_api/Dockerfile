@@ -1,9 +1,9 @@
-FROM python:3.7.2
-
+FROM tensorflow/tensorflow:1.13.1-gpu-py3
 ARG project_dir=/projects/
  
-ADD requirements.txt $project_dir
+ADD . $project_dir
  
 WORKDIR $project_dir
- 
-RUN pip install -r requirements.txt
+
+RUN apt-get update && apt-get install -y libsm6 libxrender1 libxext-dev
+RUN pip install --upgrade pip && pip install -r requirements_gpu.txt

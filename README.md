@@ -1,3 +1,5 @@
+# Docker
+
 ## no cache build
 
 `docker-compose build --no-cache`
@@ -13,3 +15,8 @@
 ## イメージ全削除
 
 `docker images -aq | xargs docker rmi`
+
+## apt-get updateでハッシュ不適合のエラーが出たら
+
+`sudo rm -rf /var/lib/apt/lists/*`
+`sudo apt-get update`

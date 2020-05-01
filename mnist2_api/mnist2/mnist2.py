@@ -2,6 +2,7 @@
 
 import time
 import keras
+
 from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
@@ -23,15 +24,15 @@ class MnistModel:
         model.add(Dense(512, activation='relu'))
         model.add(Dropout(0.2))
         model.add(Dense(self.num_classes, activation='softmax'))
-        model.summary()
         if mode == "train":
             model.compile(loss='categorical_crossentropy',
                         optimizer=RMSprop(),
                         metrics=['accuracy'])
+        print("Done load model.")
         return model
 
     def train(self, save_dir=""):
-        batch_size = 1
+        batch_size = 64
         epochs = 1
 
         # the data, split between train and test sets
@@ -52,12 +53,12 @@ class MnistModel:
 
         self.model = self.model_mnist(mode = "train")
 
-        history = self.model_mnistmodel.fit(x_train, y_train,
+        history = self.model.fit(x_train, y_train,
                             batch_size=batch_size,
                             epochs=epochs,
                             verbose=1,
                             validation_data=(x_test, y_test))
-        score = model.evaluate(x_test, y_test, verbose=0)
+        score = self.model.evaluate(x_test, y_test, verbose=0)
         # score = [0.1, 99.9]
         print('Test loss:', score[0])
         print('Test accuracy:', score[1])
@@ -65,13 +66,13 @@ class MnistModel:
         self.model.save(save_dir + 'model.h5')
         return {"loss": score[0], "acc": score[1]}
 
-    def predict(self, weight_path="mnist2/model.h5", image_path="5_test.png"):
+    def predict(self, weight_path="mnist2/model.h5", image_path="images/input/00000.png"):
         self.model.load_weights(weight_path)
 
         # 画像の読み込みとreshape
         X_test = []
         target_img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-        target_img = cv2.resize(target_img, (28, 28))
+        # target_img = cv2.resize(target_img, (28, 28))
         X_test.append(target_img)
         X_test = np.array(X_test)
         X_test = X_test.reshape(1, 784)
@@ -82,5 +83,4 @@ class MnistModel:
 
 if __name__ == "__main__":
     mnist_model = MnistModel()
-    print(mnist_model.predict("mnist2/model.h5", "5_test.png"))
-    print(mnist_model.predict("mnist2/model.h5", "5_test.png"))
+    print(mnist_model.predict("model.h5", "00000.png"))

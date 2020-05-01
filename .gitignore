@@ -1,2 +1,5 @@
 .vscode/
 images/
+.history/
+mnist_train/
+*/*/__pycache__/
