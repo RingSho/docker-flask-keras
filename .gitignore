@@ -2,4 +2,4 @@
 images/
 .history/
 mnist_train/
-*/*/__pycache__/
+.python-version
